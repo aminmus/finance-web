@@ -1,7 +1,7 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import _logo from './logo.svg';
-import Authentication from './components/authentication';
+import Login from './components/Login';
 import './App.css';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <>
       <CssBaseline />
       <div className="App">
-        <Authentication />
+        <Login />
 
         {/* <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />

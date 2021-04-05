@@ -1,60 +1,28 @@
-import React, { SyntheticEvent, useState, useEffect } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { TextField, Button } from '@material-ui/core';
-import { useQuery, useMutation, gql } from '@apollo/client';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useAuth } from '../useAuth';
 
-const LOG_IN = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-      user {
-        id
-        email
-        name
-      }
-    }
-  }
-`;
-
-function Login(_props: {}) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [login, { data, loading, error }] = useMutation(LOG_IN);
+  const history = useHistory();
+  const location = useLocation();
+  const auth = useAuth();
 
-  useEffect(() => {
-    console.log('data: ', data);
-    localStorage.setItem('accessToken', data?.login?.token);
-    setIsLoggedIn(true);
-  }, [data]);
-  useEffect(() => {
-    console.log('loading: ', loading);
-  }, [loading]);
-  useEffect(() => {
-    console.error('error: ', error);
-  }, [error]);
+  const { from } = location.state as LocationState || { from: { pathname: '/' } };
 
   async function submitLogin(event: SyntheticEvent) {
     event.preventDefault();
     try {
-      await login({ variables: { email, password } });
+      await auth?.signIn(email, password);
+      history.replace(from);
     } catch (err) {
       console.error('error caught in submitLogin: ', err);
     }
   }
 
-  function logout() {
-    localStorage.removeItem('accessToken');
-    setIsLoggedIn(false);
-  }
-
-  return isLoggedIn ? (
-    <>
-      <h1>logged in</h1>
-      <button onClick={logout} type="button">
-        Logout
-      </button>
-    </>
-  ) : (
+  return (
     <form onSubmit={submitLogin}>
       <TextField
         required
@@ -78,5 +46,9 @@ function Login(_props: {}) {
     </form>
   );
 }
+
+type LocationState = {
+  from: Location;
+};
 
 export default Login;

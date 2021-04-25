@@ -38,7 +38,7 @@ function useProvideAuth() {
       localStorage.setItem('accessToken', response.data.login.token);
       return response.data.login.user;
     } catch (err) {
-      console.error('error caught in submitLogin: ', err);
+      console.error('error caught in submitSignIn: ', err);
       throw err;
     }
   };

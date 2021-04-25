@@ -1,48 +1,11 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import {
-  Route, RouteProps, Switch, Redirect,
-} from 'react-router-dom';
-import _logo from './logo.svg';
-import Login from './components/Login';
+import { Box } from '@material-ui/core';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
-import { ProvideAuth, useAuth } from './useAuth';
-
-// A wrapper for <Route> that redirects to the login
-// screen if you're not yet authenticated.
-function PrivateRoute({
-  children,
-  // isLoggedIn,
-  ...routeOptions
-}: PrivateRouteProps) {
-  const auth = useAuth();
-  return (
-    <Route
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...routeOptions}
-      render={({ location }) => (auth?.user ? (
-        children
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/sign-in',
-            state: { from: location },
-          }}
-        />
-      ))}
-    />
-  );
-}
-
-type PrivateRouteProps = {
-  children: React.ReactNode;
-  // isLoggedIn: boolean;
-  path: string;
-  routeOptions?: RouteProps;
-};
-PrivateRoute.defaultProps = {
-  routeOptions: {},
-};
+import Layout from './components/Layout';
+import PrivateRoute from './components/PrivateRoute';
+import SignIn from './components/SignIn';
+import { ProvideAuth } from './useAuth';
 
 function App() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -55,26 +18,26 @@ function App() {
   // }
 
   return (
-    <>
-      <CssBaseline />
-      <div className="App">
-        <ProvideAuth>
+    <div className="App">
+      <ProvideAuth>
+        <Layout>
           <Switch>
             <PrivateRoute path="/protected">
               <p> Yoo we logged in</p>
             </PrivateRoute>
             <Route path="/sign-in">
-              <Login />
-              {/* <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
+              <SignIn />
+              {/* <SignIn isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
             </Route>
             <Route path="/">
-              <p>Main path</p>
+              <Box display="flex">
+                <p>Main path</p>
+              </Box>
             </Route>
           </Switch>
-
-        </ProvideAuth>
-      </div>
-    </>
+        </Layout>
+      </ProvideAuth>
+    </div>
   );
 }
 

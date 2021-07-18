@@ -1,7 +1,9 @@
 import React, {
-  useState, useContext, createContext,
+  useState, useContext, createContext, useEffect,
 } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import {
+  useMutation, gql, useQuery, useLazyQuery,
+} from '@apollo/client';
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,10 +26,41 @@ mutation login($email: String!, $password: String!) {
 }
 `;
 
+const MY_USER = gql`
+query {
+    myUser {
+      id
+      email
+      name
+    }
+  }
+`;
+
+// TODO: Fix so that user auth updates if detecting good auth token without redirecting
+// (PrivateRoute redirects to sign in)
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
   const [authenticate, { data, loading, error }] = useMutation(SIGN_IN);
+  // const [useMyUser, myUser] = useQuery(MY_USER);
+  const [getMyUser, myUserResponse] = useLazyQuery(MY_USER);
+
+  useEffect(() => {
+    if (localStorage.getItem('accessToken')) {
+      getMyUser();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('useMyUser response: ', myUserResponse);
+    if (myUserResponse.error) console.error(myUserResponse.error);
+    if (myUserResponse.data) setUser(myUserResponse.data);
+  }, [myUserResponse.loading, myUserResponse.data]);
+
+  useEffect(() => {
+    console.log('user update: ', user);
+  }, [user]);
 
   // Wrap any auth methods we want to use making sure ...
   // ... to save the user to state.

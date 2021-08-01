@@ -5,7 +5,9 @@ import './App.css';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 import SignIn from './components/SignIn';
+import AssetsView from './components/AssetsView';
 import { ProvideAuth } from './useAuth';
+import { ProvidePortfolios } from './usePortfolios';
 
 function App() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +24,11 @@ function App() {
       <ProvideAuth>
         <Layout>
           <Switch>
+            <PrivateRoute path="/assets">
+              <ProvidePortfolios>
+                <AssetsView />
+              </ProvidePortfolios>
+            </PrivateRoute>
             <PrivateRoute path="/protected">
               <p> Yoo we logged in</p>
             </PrivateRoute>

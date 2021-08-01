@@ -1,5 +1,5 @@
 import React, {
-  useState, useContext, createContext,
+  useContext, createContext,
 } from 'react';
 import { useQuery, gql, ApolloError } from '@apollo/client';
 

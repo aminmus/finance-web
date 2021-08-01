@@ -1,7 +1,9 @@
 import React, {
-  useState, useContext, createContext,
+  useState, useContext, createContext, useEffect,
 } from 'react';
-import { useMutation, gql } from '@apollo/client';
+import {
+  useMutation, gql, useLazyQuery,
+} from '@apollo/client';
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -24,18 +26,69 @@ mutation login($email: String!, $password: String!) {
 }
 `;
 
+const MY_USER = gql`
+query {
+    myUser {
+      id
+      email
+      name
+    }
+  }
+`;
+
+// TODO: Fix so that user auth updates if detecting good auth token without redirecting
+// (PrivateRoute redirects to sign in)
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  const [authenticate, { data, loading, error }] = useMutation(SIGN_IN);
+  const [isLoading, setIsLoading] = useState(true);
+  const [authenticate, {
+    data, loading, error, called,
+  }] = useMutation(SIGN_IN);
+  // const [useMyUser, myUser] = useQuery(MY_USER);
+  const [getMyUser, myUserResponse] = useLazyQuery(MY_USER, {
+    onCompleted: (resData) => {
+      console.log('onCompleted getMyUser: ', resData);
+      setUser(resData.myUser);
+    },
+  });
+
+  useEffect(() => {
+    if ((called && loading) || (myUserResponse.called && myUserResponse.loading)) {
+      setIsLoading(true);
+    } else if ((called && !loading) || (myUserResponse.called && !loading)) {
+      setIsLoading(false);
+    }
+  }, [loading, myUserResponse.loading, called, myUserResponse.called]);
+
+  useEffect(() => {
+    // setIsLoading(true);
+    if (localStorage.getItem('accessToken')) {
+      getMyUser();
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   console.log('useMyUser response: ', myUserResponse);
+  //   if (myUserResponse.error) console.error(myUserResponse.error);
+  //   if (myUserResponse.data) setUser(myUserResponse.data);
+  //   setIsLoading(myUserResponse.loading);
+  // }, [myUserResponse.loading, myUserResponse.data]);
+
+  useEffect(() => {
+    console.log('user update: ', user);
+  }, [user]);
 
   // Wrap any auth methods we want to use making sure ...
   // ... to save the user to state.
   const signIn = async (email: string, password: string) => {
     try {
+      setIsLoading(true);
       const response = await authenticate({ variables: { email, password } });
       setUser(response.data.login.user);
       localStorage.setItem('accessToken', response.data.login.token);
+      console.log('set user');
       return response.data.login.user;
     } catch (err) {
       console.error('error caught in submitSignIn: ', err);
@@ -47,6 +100,20 @@ function useProvideAuth() {
     setUser(null);
     localStorage.removeItem('accessToken');
   };
+
+  // const checkAuth = () => {
+  //   if (user) {
+  //     return true;
+  //     // getMyUser();
+  //   }
+
+  //   // if (myUserResponse.called && !myUserResponse.loading) {
+  //   //   return false;
+  //   // }
+  //   getMyUser();
+
+  //   // return false;
+  // };
 
   // const signup = (email, password) => firebase
   //   .auth()
@@ -88,7 +155,9 @@ function useProvideAuth() {
   return {
     user,
     signIn,
+    // isLoading: loading,
     signOut,
+    isLoading,
     // signUp,
     // sendPasswordResetEmail,
     // confirmPasswordReset,
@@ -106,4 +175,5 @@ interface AuthContextType {
   user: object | null;
   signIn: Function;
   signOut: Function;
+  isLoading: Boolean;
 }

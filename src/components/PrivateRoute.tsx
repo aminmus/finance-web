@@ -12,7 +12,8 @@ function PrivateRoute({
   ...routeOptions
 }: PrivateRouteProps) {
   const auth = useAuth();
-  return (
+  console.log('auth: ', auth);
+  return (auth && auth.isLoading) ? <p>loading</p> : (
     <Route
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...routeOptions}

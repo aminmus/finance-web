@@ -8,7 +8,7 @@ import SignIn from './components/SignIn';
 import PortfoliosView from './components/PortfoliosView';
 import { ProvideAuth } from './useAuth';
 import { ProvidePortfolios } from './usePortfolios';
-import Portfolio from './components/Portfolio';
+import PortfolioView from './components/PortfolioView';
 
 function App() {
   // const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,7 +26,7 @@ function App() {
         <Layout>
           <Switch>
             <PrivateRoute path="/portfolios/:portfolioId">
-              <Portfolio />
+              <PortfolioView />
             </PrivateRoute>
             <PrivateRoute path="/portfolios">
               <ProvidePortfolios>

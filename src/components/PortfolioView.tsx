@@ -5,7 +5,7 @@ import { usePortfolios } from '../usePortfolios';
 type Props = {};
 
 // eslint-disable-next-line no-empty-pattern
-function Portfolio({ }: Props) {
+function PortfolioView({ }: Props) {
   // @TODO: Either we add all the portfolios data inside portfolios context,
   // or we fetch the single portfolio by itself (with or without using context again for it).
   // const usePortfolios()
@@ -18,4 +18,4 @@ function Portfolio({ }: Props) {
   );
 }
 
-export default Portfolio;
+export default PortfolioView;

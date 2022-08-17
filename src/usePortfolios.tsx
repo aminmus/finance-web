@@ -23,19 +23,36 @@ query myPortfolios {
     name
     description
     assetQuantity
-  }
-}
-`;
-
-const GET_PORTFOLIO = gql`
-query portfolio($portfolioId: Int) {
-  portfolio(where: {id: $portfolioId}) {
-    id
-    updatedAt
-    createdAt
-    name
-    description
-    assetQuantity
+    publicAssets {
+      id
+      symbol
+      market
+      baseAsset {
+        name
+        description
+        quantity
+        createdAt
+        updatedAt
+        portfolioId
+      }
+    }
+    privateAssets {
+      id
+      baseAsset {
+        name
+        description
+        quantity
+        createdAt
+        updatedAt
+        portfolioId
+      }
+    historicalValues(first: 20) {
+        assetId
+        id
+        date
+        unitPrice
+      }
+    }
   }
 }
 `;

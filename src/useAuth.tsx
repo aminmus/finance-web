@@ -27,7 +27,7 @@ mutation login($email: String!, $password: String!) {
 `;
 
 const MY_USER = gql`
-query {
+query myUser {
     myUser {
       id
       email

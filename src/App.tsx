@@ -26,9 +26,11 @@ function App() {
         <Layout>
           <Switch>
             <PrivateRoute path="/portfolios/:portfolioId">
-              <PortfolioView />
+              <ProvidePortfolios>
+                <PortfolioView />
+              </ProvidePortfolios>
             </PrivateRoute>
-            <PrivateRoute path="/portfolios">
+            <PrivateRoute routeOptions={{ exact: true }} path="/portfolios">
               <ProvidePortfolios>
                 <PortfoliosView />
               </ProvidePortfolios>

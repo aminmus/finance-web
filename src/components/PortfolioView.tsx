@@ -1,20 +1,38 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { usePortfolios } from '../usePortfolios';
+import { myPortfolios_myPortfolios } from '../__generated__/myPortfolios';
 
-type Props = {};
+function PortfolioView() {
+  /*
+    TODO:
+    1. General portfolio information
+    2. List public and private assets
+    3. Show total portfolio worth
+  */
 
-// eslint-disable-next-line no-empty-pattern
-function PortfolioView({ }: Props) {
-  // @TODO: Either we add all the portfolios data inside portfolios context,
-  // or we fetch the single portfolio by itself (with or without using context again for it).
-  // const usePortfolios()
+  const { portfolioId } = useParams() as { portfolioId: string };
+  const { data, loading, error } = usePortfolios();
 
-  // @ts-ignore
-  const { portfolioId } = useParams();
-  console.log(portfolioId);
+  const currentPortfolio = data && data.find(
+    (portfolio) => portfolio.id.toString() === portfolioId,
+  );
+
+  if (!currentPortfolio && loading) {
+    return <p>Loading portfolio...</p>;
+  }
+  if (!currentPortfolio && !loading) {
+    return <p>Portfolio not found</p>;
+  }
+
   return (
-    <p>Portfolio</p>
+    <div>
+      <div id="portfolio-info">
+        <p>{currentPortfolio?.name}</p>
+        <p>{currentPortfolio?.description}</p>
+        <p>{currentPortfolio?.assetQuantity}</p>
+      </div>
+    </div>
   );
 }
 

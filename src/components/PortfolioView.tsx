@@ -14,7 +14,23 @@ function PortfolioView({ }: Props) {
   const { portfolioId } = useParams();
   console.log(portfolioId);
   return (
-    <p>Portfolio</p>
+    <div>
+      <div id="portfolio-info">
+        <h1>
+          {currentPortfolio?.name}
+        </h1>
+        <p>
+          <div id="portfolio-description">
+            <span>Description: </span>
+            <span>{currentPortfolio?.description}</span>
+          </div>
+          <div id="portfolio-asset-quantity">
+            <span>Unique assets: </span>
+            <span>{currentPortfolio?.assetQuantity}</span>
+          </div>
+        </p>
+      </div>
+    </div>
   );
 }
 

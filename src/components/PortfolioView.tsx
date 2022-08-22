@@ -1,7 +1,48 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { usePortfolios } from '../usePortfolios';
-import { myPortfolios_myPortfolios } from '../__generated__/myPortfolios';
+import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../__generated__/myPortfolios';
+
+function PrivateAssetItem(
+  { privateAsset: { baseAsset } }: { privateAsset: myPortfolios_myPortfolios_privateAssets },
+) {
+  return (
+    <li>
+      <p>{baseAsset.name}</p>
+      <p>
+        <span>Quantity: </span>
+        <span>{baseAsset.quantity}</span>
+      </p>
+    </li>
+  );
+}
+
+function PublicAssetItem(
+  {
+    publicAsset: {
+      baseAsset,
+      symbol,
+      market,
+    },
+  }: { publicAsset: myPortfolios_myPortfolios_publicAssets },
+) {
+  return (
+    <li>
+      <p>{baseAsset.name}</p>
+      <p>
+        {symbol}
+        {' '}
+        @
+        {' '}
+        {market}
+      </p>
+      <p>
+        <span>Quantity: </span>
+        <span>{baseAsset.quantity}</span>
+      </p>
+    </li>
+  );
+}
 
 function PortfolioView() {
   /*
@@ -46,32 +87,13 @@ function PortfolioView() {
         <h2>Private Assets</h2>
         <ul id="private-assets">
           {currentPortfolio.privateAssets && currentPortfolio.privateAssets.map((privateAsset) => (
-            <li>
-              <p>{privateAsset?.baseAsset.name}</p>
-              <p>
-                <span>Quantity: </span>
-                <span>{privateAsset?.baseAsset.quantity}</span>
-              </p>
-            </li>
+            privateAsset && <PrivateAssetItem privateAsset={privateAsset} />
           ))}
         </ul>
         <h2>Public Assets</h2>
         <ul id="public-assets">
           {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
-            <li>
-              <p>{publicAsset?.baseAsset.name}</p>
-              <p>
-                {publicAsset?.symbol}
-                {' '}
-                @
-                {' '}
-                {publicAsset?.market}
-              </p>
-              <p>
-                <span>Quantity: </span>
-                <span>{publicAsset?.baseAsset.quantity}</span>
-              </p>
-            </li>
+            publicAsset && <PublicAssetItem publicAsset={publicAsset} />
           ))}
         </ul>
       </div>

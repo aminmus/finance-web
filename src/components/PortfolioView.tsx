@@ -30,11 +30,12 @@ function PublicAssetItem(
     <li>
       <p>{baseAsset.name}</p>
       <p>
-        {symbol}
-        {' '}
-        @
-        {' '}
-        {market}
+        <span>Symbol: </span>
+        <span>{symbol}</span>
+      </p>
+      <p>
+        <span>Market: </span>
+        <span>{market}</span>
       </p>
       <p>
         <span>Quantity: </span>

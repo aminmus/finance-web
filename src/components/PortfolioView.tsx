@@ -25,7 +25,7 @@ function PortfolioView() {
     return <p>Portfolio not found</p>;
   }
 
-  return (
+  return currentPortfolio ? (
     <div>
       <div id="portfolio-info">
         <h1>
@@ -42,8 +42,41 @@ function PortfolioView() {
           </div>
         </p>
       </div>
+      <div id="portfolio-assets">
+        <h2>Private Assets</h2>
+        <ul id="private-assets">
+          {currentPortfolio.privateAssets && currentPortfolio.privateAssets.map((privateAsset) => (
+            <li>
+              <p>{privateAsset?.baseAsset.name}</p>
+              <p>
+                <span>Quantity: </span>
+                <span>{privateAsset?.baseAsset.quantity}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+        <h2>Public Assets</h2>
+        <ul id="public-assets">
+          {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
+            <li>
+              <p>{publicAsset?.baseAsset.name}</p>
+              <p>
+                {publicAsset?.symbol}
+                {' '}
+                @
+                {' '}
+                {publicAsset?.market}
+              </p>
+              <p>
+                <span>Quantity: </span>
+                <span>{publicAsset?.baseAsset.quantity}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-  );
+  ) : (<div />);
 }
 
 export default PortfolioView;

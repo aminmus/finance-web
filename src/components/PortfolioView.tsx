@@ -46,13 +46,6 @@ function PublicAssetItem(
 }
 
 function PortfolioView() {
-  /*
-    TODO:
-    1. General portfolio information
-    2. List public and private assets
-    3. Show total portfolio worth
-  */
-
   const { portfolioId } = useParams() as { portfolioId: string };
   const { data, loading, error } = usePortfolios();
 

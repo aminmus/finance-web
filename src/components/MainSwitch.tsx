@@ -1,5 +1,5 @@
 import { Box, Button } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth } from '../useAuth';
 import { ProvidePortfolios } from '../usePortfolios';
@@ -11,8 +11,7 @@ import SignIn from './SignIn';
 function MainSwitch() {
   const auth = useAuth();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => (auth?.user ? setIsLoggedIn(true) : setIsLoggedIn(false)), [auth?.user]);
+  const isLoggedIn = auth?.user ?? false;
 
   return (
     <Switch>

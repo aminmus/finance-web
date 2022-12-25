@@ -7,6 +7,11 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface UserWhereUniqueInput {
+  id?: number | null;
+  email?: string | null;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

@@ -5,8 +5,8 @@ import React, {
   ChangeEvent, SyntheticEvent, useEffect, useState,
 } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useAuth } from '../useAuth';
-import { usePortfolios } from '../usePortfolios';
+import { useAuth } from '../contexts/useAuth';
+import { usePortfolios } from '../contexts/usePortfolios';
 
 export default function CreatePortfolio() {
   const portfolioCtx = usePortfolios();

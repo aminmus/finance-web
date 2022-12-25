@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Link, Route, Switch, useRouteMatch,
 } from 'react-router-dom';
-import { usePortfolios } from '../usePortfolios';
+import { usePortfolios } from '../contexts/usePortfolios';
 import CreatePortfolio from './CreatePortfolio';
 import PortfolioView from './PortfolioView';
 

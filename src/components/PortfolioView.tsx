@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { usePortfolios } from '../usePortfolios';
+import { usePortfolios } from '../contexts/usePortfolios';
 import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../__generated__/myPortfolios';
 
 function PrivateAssetItem(

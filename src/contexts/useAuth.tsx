@@ -2,9 +2,10 @@ import React, {
   useState, useContext, createContext, useEffect,
 } from 'react';
 import {
-  useMutation, gql, useLazyQuery,
+  useMutation, useLazyQuery,
 } from '@apollo/client';
-import { myUser } from './__generated__/myUser';
+import { myUser } from '../__generated__/myUser';
+import { MY_USER, SIGN_IN } from '../graphql-strings/auth';
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -13,29 +14,6 @@ export const useAuth = () => useContext(authContext);
 type ProvideAuthProps = {
   children: React.ReactNode;
 };
-
-const SIGN_IN = gql`
-mutation login($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
-    token
-    user {
-      id
-      email
-      name
-    }
-  }
-}
-`;
-
-const MY_USER = gql`
-query myUser {
-    myUser {
-      id
-      email
-      name
-    }
-  }
-`;
 
 // TODO: Fix so that user auth updates if detecting good auth token without redirecting
 // (PrivateRoute redirects to sign in)

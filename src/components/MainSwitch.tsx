@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button } from '@material-ui/core';
 import { Switch, Route, Link } from 'react-router-dom';
-import { useAuth } from '../useAuth';
-import { ProvidePortfolios } from '../usePortfolios';
+import { useAuth } from '../contexts/useAuth';
+import { ProvidePortfolios } from '../contexts/usePortfolios';
 import PortfoliosView from './PortfoliosView';
 import PrivateRoute from './PrivateRoute';
 import SignIn from './SignIn';

@@ -4,6 +4,7 @@ import React, {
 import {
   useMutation, gql, useLazyQuery,
 } from '@apollo/client';
+import { myUser } from './__generated__/myUser';
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -172,7 +173,7 @@ export function ProvideAuth({ children }: ProvideAuthProps) {
 }
 
 interface AuthContextType {
-  user: object | null;
+  user: myUser['myUser'] | null;
   signIn: Function;
   signOut: Function;
   isLoading: Boolean;

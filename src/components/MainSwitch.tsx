@@ -1,10 +1,9 @@
-import { Box, Button } from '@material-ui/core';
 import React from 'react';
+import { Box, Button } from '@material-ui/core';
 import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth } from '../useAuth';
 import { ProvidePortfolios } from '../usePortfolios';
 import PortfoliosView from './PortfoliosView';
-import PortfolioView from './PortfolioView';
 import PrivateRoute from './PrivateRoute';
 import SignIn from './SignIn';
 
@@ -15,12 +14,7 @@ function MainSwitch() {
 
   return (
     <Switch>
-      <PrivateRoute path="/portfolios/:portfolioId">
-        <ProvidePortfolios>
-          <PortfolioView />
-        </ProvidePortfolios>
-      </PrivateRoute>
-      <PrivateRoute routeOptions={{ exact: true }} path="/portfolios">
+      <PrivateRoute path="/portfolios">
         <ProvidePortfolios>
           <PortfoliosView />
         </ProvidePortfolios>

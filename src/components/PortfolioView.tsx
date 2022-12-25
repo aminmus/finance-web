@@ -49,9 +49,9 @@ function PortfolioView() {
   const { portfolioId } = useParams() as { portfolioId: string };
   const portfoliosCtx = usePortfolios();
 
-  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx.data.find(
-    (portfolio) => portfolio.id.toString() === portfolioId,
-  );
+  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx.data
+    .filter(Boolean)
+    .find((portfolio) => portfolio?.id.toString() === portfolioId);
 
   if (!currentPortfolio && portfoliosCtx?.loading) {
     return <p>Loading portfolio...</p>;

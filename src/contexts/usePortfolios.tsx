@@ -4,14 +4,14 @@ import React, {
 import {
   useQuery, ApolloError, useMutation, MutationResult,
 } from '@apollo/client';
-import { myPortfolios_myPortfolios as Portfolio } from '../__generated__/myPortfolios';
+import { myPortfolios } from '../__generated__/myPortfolios';
 import { createOnePortfolio, createOnePortfolioVariables } from '../__generated__/createOnePortfolio';
 import { GET_PORTFOLIOS, CREATE_PORTFOLIO } from '../graphql-strings/portfolios';
 
 interface PortfoliosContextType {
   loading: boolean;
   error: ApolloError | undefined;
-  data: null | Portfolio[];
+  data: null | myPortfolios['myPortfolios'];
   createOne: Function;
   createOneResponse: MutationResult<createOnePortfolio>;
 }
@@ -22,9 +22,7 @@ type ProvidePortfolioProps = {
   children: React.ReactNode;
 };
 export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
-  const {
-    loading, error, data,
-  } = useQuery(GET_PORTFOLIOS);
+  const { loading, error, data } = useQuery<myPortfolios>(GET_PORTFOLIOS);
   const [
     createOne,
     createOneResponse,
@@ -34,7 +32,7 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     <portfoliosContext.Provider value={{
       loading,
       error,
-      data: data ? data.myPortfolios : data,
+      data: data?.myPortfolios ?? null,
       createOne,
       createOneResponse,
     }}

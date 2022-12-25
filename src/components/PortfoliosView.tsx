@@ -1,32 +1,44 @@
-import React, { useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React from 'react';
+import {
+  Link, Route, Switch, useRouteMatch,
+} from 'react-router-dom';
 import { usePortfolios } from '../usePortfolios';
+import CreatePortfolio from './CreatePortfolio';
+import PortfolioView from './PortfolioView';
 
 function PortfoliosView() {
-  const { data, loading, error } = usePortfolios();
+  const portfoliosCtx = usePortfolios();
   const match = useRouteMatch();
 
-  useEffect(() => {
-    console.log({ data, loading, error });
-  }, [data, loading, error]);
-  console.log('reloading?');
-
   return (
-    <div>
-      <p>Portfolios View</p>
-      <ul>
-        {data && data.map((portfolio) => (
+    <Switch>
+      <Route path={`${match.path}/create`}>
+        <CreatePortfolio />
+      </Route>
+      <Route path={`${match.path}/:portfolioId`}>
+        {/* <ProvidePortfolios> */}
+        <PortfolioView />
+        {/* </ProvidePortfolios> */}
+      </Route>
+      <Route path="/">
+        <div>
+          <h1>My portfolios</h1>
+          <Link to={`${match.path}/create`}>Create a portfolio</Link>
+          <ul>
+            {portfoliosCtx?.data && portfoliosCtx.data.map((portfolio) => (
 
-          <li key={portfolio.id}>
-            <Link to={`${match.url}/${portfolio.id}`}>
-              <p>{portfolio.name}</p>
-              <p>{portfolio.description}</p>
-              <p>{portfolio.assetQuantity}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+              <li key={portfolio.id}>
+                <Link to={`${match.url}/${portfolio.id}`}>
+                  <p>{portfolio.name}</p>
+                  <p>{portfolio.description}</p>
+                  <p>{portfolio.assetQuantity}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Route>
+    </Switch>
   );
 }
 

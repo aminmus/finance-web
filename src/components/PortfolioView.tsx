@@ -47,16 +47,16 @@ function PublicAssetItem(
 
 function PortfolioView() {
   const { portfolioId } = useParams() as { portfolioId: string };
-  const { data, loading, error } = usePortfolios();
+  const portfoliosCtx = usePortfolios();
 
-  const currentPortfolio = data && data.find(
+  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx.data.find(
     (portfolio) => portfolio.id.toString() === portfolioId,
   );
 
-  if (!currentPortfolio && loading) {
+  if (!currentPortfolio && portfoliosCtx?.loading) {
     return <p>Loading portfolio...</p>;
   }
-  if (!currentPortfolio && !loading) {
+  if (!currentPortfolio && !portfoliosCtx?.loading) {
     return <p>Portfolio not found</p>;
   }
 

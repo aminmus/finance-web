@@ -4,8 +4,8 @@ import React, {
 import {
   useMutation, useLazyQuery,
 } from '@apollo/client';
-import { myUser } from '../__generated__/myUser';
 import { MY_USER, SIGN_IN } from '../graphql-strings/auth';
+import { myUser } from '../graphql-strings/__generated__/myUser';
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 

@@ -1,7 +1,8 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Button } from '@material-ui/core';
+import React, { SyntheticEvent, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { usePortfolios } from '../contexts/usePortfolios';
-import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../__generated__/myPortfolios';
+import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../graphql-strings/__generated__/myPortfolios';
 
 function PrivateAssetItem(
   { privateAsset: { baseAsset } }: { privateAsset: myPortfolios_myPortfolios_privateAssets },
@@ -48,8 +49,9 @@ function PublicAssetItem(
 function PortfolioView() {
   const { portfolioId } = useParams() as { portfolioId: string };
   const portfoliosCtx = usePortfolios();
+  const history = useHistory();
 
-  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx.data
+  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx?.data
     .filter(Boolean)
     .find((portfolio) => portfolio?.id.toString() === portfolioId);
 
@@ -60,8 +62,28 @@ function PortfolioView() {
     return <p>Portfolio not found</p>;
   }
 
+  const handleDeletePortfolio = (_event: SyntheticEvent) => {
+    if (!currentPortfolio) return;
+
+    console.log({ variables: { portfolioId: currentPortfolio.id } });
+
+    portfoliosCtx?.deleteOne({ variables: { portfolioId: currentPortfolio.id } });
+  };
+
+  useEffect(() => {
+    if (portfoliosCtx?.deleteOneResponse.called && !portfoliosCtx?.deleteOneResponse.loading) {
+      history.push('/portfolios');
+    }
+  },
+  [portfoliosCtx?.deleteOneResponse.loading, portfoliosCtx?.deleteOneResponse.called]);
+
+  if (portfoliosCtx?.deleteOneResponse.called && portfoliosCtx?.deleteOneResponse.loading) {
+    return <p>Deleting Portfolio...</p>;
+  }
+
   return currentPortfolio ? (
     <div>
+      <Button type="button" onClick={handleDeletePortfolio}>Delete Portfolio</Button>
       <div id="portfolio-info">
         <h1>
           {currentPortfolio?.name}

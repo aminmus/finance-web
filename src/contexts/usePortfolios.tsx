@@ -4,9 +4,10 @@ import React, {
 import {
   useQuery, ApolloError, useMutation, MutationResult,
 } from '@apollo/client';
-import { myPortfolios } from '../__generated__/myPortfolios';
-import { createOnePortfolio, createOnePortfolioVariables } from '../__generated__/createOnePortfolio';
-import { GET_PORTFOLIOS, CREATE_PORTFOLIO } from '../graphql-strings/portfolios';
+import { GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO } from '../graphql-strings/portfolios';
+import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-strings/__generated__/deleteOnePortfolio';
+import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
+import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
 
 interface PortfoliosContextType {
   loading: boolean;
@@ -14,6 +15,8 @@ interface PortfoliosContextType {
   data: null | myPortfolios['myPortfolios'];
   createOne: Function;
   createOneResponse: MutationResult<createOnePortfolio>;
+  deleteOne: Function;
+  deleteOneResponse: MutationResult<deleteOnePortfolio>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -27,6 +30,10 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     createOne,
     createOneResponse,
   ] = useMutation<createOnePortfolio, createOnePortfolioVariables>(CREATE_PORTFOLIO);
+  const [
+    deleteOne,
+    deleteOneResponse,
+  ] = useMutation<deleteOnePortfolio, deleteOnePortfolioVariables>(DELETE_PORTFOLIO);
 
   return (
     <portfoliosContext.Provider value={{
@@ -35,6 +42,8 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       data: data?.myPortfolios ?? null,
       createOne,
       createOneResponse,
+      deleteOne,
+      deleteOneResponse,
     }}
     >
       {children}

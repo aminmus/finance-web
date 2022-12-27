@@ -74,10 +74,6 @@ function PortfolioView() {
     portfoliosCtx?.deleteOne({ variables: { portfolioId: currentPortfolio.id } });
   };
 
-  // const handleAddPublicAsset = (_event: SyntheticEvent) => {
-  //   history.push();
-  // };
-
   useEffect(() => {
     if (portfoliosCtx?.deleteOneResponse.called && !portfoliosCtx?.deleteOneResponse.loading) {
       history.push('/portfolios');

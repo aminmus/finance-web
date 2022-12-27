@@ -2,12 +2,14 @@ import React, {
   useContext, createContext,
 } from 'react';
 import {
-  useQuery, ApolloError, useMutation, MutationResult,
+  useQuery, ApolloError, useMutation, MutationResult, MutationFunctionOptions, FetchResult,
 } from '@apollo/client';
 import { GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO } from '../graphql-strings/portfolios';
 import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-strings/__generated__/deleteOnePortfolio';
 import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
+import { CREATE_PUBLIC_ASSET } from '../graphql-strings/assets';
+import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-strings/__generated__/createOnePublicAsset';
 
 interface PortfoliosContextType {
   loading: boolean;
@@ -17,6 +19,13 @@ interface PortfoliosContextType {
   createOneResponse: MutationResult<createOnePortfolio>;
   deleteOne: Function;
   deleteOneResponse: MutationResult<deleteOnePortfolio>;
+  createPublicAsset: (
+    options?: MutationFunctionOptions<
+    createOnePublicAsset,
+    createOnePublicAssetVariables
+    > | undefined
+  ) => Promise<FetchResult<this['createPublicAssetResponse']['data']>>;
+  createPublicAssetResponse: MutationResult<createOnePublicAsset>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -34,6 +43,10 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     deleteOne,
     deleteOneResponse,
   ] = useMutation<deleteOnePortfolio, deleteOnePortfolioVariables>(DELETE_PORTFOLIO);
+  const [
+    createPublicAsset,
+    createPublicAssetResponse,
+  ] = useMutation<createOnePublicAsset, createOnePublicAssetVariables>(CREATE_PUBLIC_ASSET);
 
   return (
     <portfoliosContext.Provider value={{
@@ -44,6 +57,8 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       createOneResponse,
       deleteOne,
       deleteOneResponse,
+      createPublicAsset,
+      createPublicAssetResponse,
     }}
     >
       {children}

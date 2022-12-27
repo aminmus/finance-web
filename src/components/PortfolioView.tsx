@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import { usePortfolios } from '../contexts/usePortfolios';
 import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../graphql-strings/__generated__/myPortfolios';
+import CreatePrivateAsset from './CreatePrivateAsset';
 import CreatePublicAsset from './CreatePublicAsset';
 
 function PrivateAssetItem(
@@ -90,11 +91,17 @@ function PortfolioView() {
       <Route path={`${match.path}/assets/public/create`}>
         <CreatePublicAsset portfolioId={currentPortfolio.id} />
       </Route>
+      <Route path={`${match.path}/assets/private/create`}>
+        <CreatePrivateAsset portfolioId={currentPortfolio.id} />
+      </Route>
       <Route path={`${match.path}/`}>
         <div>
           <ButtonGroup>
             <Button href={`${match.url}/assets/public/create`} type="button">
-              Add PublicAsset
+              Add Public Asset
+            </Button>
+            <Button href={`${match.url}/assets/private/create`} type="button">
+              Add Private Asset
             </Button>
             <Button type="button" onClick={handleDeletePortfolio}>Delete Portfolio</Button>
           </ButtonGroup>

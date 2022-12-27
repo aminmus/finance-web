@@ -3,8 +3,6 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { UserWhereUniqueInput } from "./../../__generated__/globalTypes";
-
 // ====================================================
 // GraphQL mutation operation: createOnePortfolio
 // ====================================================
@@ -62,5 +60,5 @@ export interface createOnePortfolio {
 export interface createOnePortfolioVariables {
   name: string;
   description?: string | null;
-  userId: UserWhereUniqueInput['id'] | UserWhereUniqueInput['email'];
+  userId: number;
 }

@@ -1,7 +1,11 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import { Button, ButtonGroup } from '@material-ui/core';
+import React, { SyntheticEvent, useEffect } from 'react';
+import {
+  Route, Switch, useHistory, useParams, useRouteMatch,
+} from 'react-router-dom';
 import { usePortfolios } from '../contexts/usePortfolios';
-import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../__generated__/myPortfolios';
+import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../graphql-strings/__generated__/myPortfolios';
+import CreatePublicAsset from './CreatePublicAsset';
 
 function PrivateAssetItem(
   { privateAsset: { baseAsset } }: { privateAsset: myPortfolios_myPortfolios_privateAssets },
@@ -48,10 +52,12 @@ function PublicAssetItem(
 function PortfolioView() {
   const { portfolioId } = useParams() as { portfolioId: string };
   const portfoliosCtx = usePortfolios();
+  const history = useHistory();
+  const match = useRouteMatch();
 
-  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx.data.find(
-    (portfolio) => portfolio.id.toString() === portfolioId,
-  );
+  const currentPortfolio = portfoliosCtx?.data && portfoliosCtx?.data
+    .filter(Boolean)
+    .find((portfolio) => portfolio?.id.toString() === portfolioId);
 
   if (!currentPortfolio && portfoliosCtx?.loading) {
     return <p>Loading portfolio...</p>;
@@ -60,39 +66,78 @@ function PortfolioView() {
     return <p>Portfolio not found</p>;
   }
 
+  const handleDeletePortfolio = (_event: SyntheticEvent) => {
+    if (!currentPortfolio) return;
+
+    console.log({ variables: { portfolioId: currentPortfolio.id } });
+
+    portfoliosCtx?.deleteOne({ variables: { portfolioId: currentPortfolio.id } });
+  };
+
+  // const handleAddPublicAsset = (_event: SyntheticEvent) => {
+  //   history.push();
+  // };
+
+  useEffect(() => {
+    if (portfoliosCtx?.deleteOneResponse.called && !portfoliosCtx?.deleteOneResponse.loading) {
+      history.push('/portfolios');
+    }
+  },
+  [portfoliosCtx?.deleteOneResponse.loading, portfoliosCtx?.deleteOneResponse.called]);
+
+  if (portfoliosCtx?.deleteOneResponse.called && portfoliosCtx?.deleteOneResponse.loading) {
+    return <p>Deleting Portfolio...</p>;
+  }
+
   return currentPortfolio ? (
-    <div>
-      <div id="portfolio-info">
-        <h1>
-          {currentPortfolio?.name}
-        </h1>
-        <p>
-          <div id="portfolio-description">
-            <span>Description: </span>
-            <span>{currentPortfolio?.description}</span>
+    <Switch>
+      <Route path={`${match.path}/assets/public/create`}>
+        <CreatePublicAsset portfolioId={currentPortfolio.id} />
+      </Route>
+      <Route path={`${match.path}/`}>
+        <div>
+          <ButtonGroup>
+            <Button href={`${match.url}/assets/public/create`} type="button">
+              Add PublicAsset
+            </Button>
+            <Button type="button" onClick={handleDeletePortfolio}>Delete Portfolio</Button>
+          </ButtonGroup>
+          <div id="portfolio-info">
+            <h1>
+              {currentPortfolio?.name}
+            </h1>
+            <p>
+              <div id="portfolio-description">
+                <span>Description: </span>
+                <span>{currentPortfolio?.description}</span>
+              </div>
+              <div id="portfolio-asset-quantity">
+                <span>Unique assets: </span>
+                <span>{currentPortfolio?.assetQuantity}</span>
+              </div>
+            </p>
           </div>
-          <div id="portfolio-asset-quantity">
-            <span>Unique assets: </span>
-            <span>{currentPortfolio?.assetQuantity}</span>
+          <div id="portfolio-assets">
+            <h2>Private Assets</h2>
+            <ul id="private-assets">
+              {currentPortfolio.privateAssets
+                && currentPortfolio.privateAssets.map((privateAsset) => (
+                  privateAsset && <PrivateAssetItem privateAsset={privateAsset} />
+                ))}
+            </ul>
+            <h2>Public Assets</h2>
+            <ul id="public-assets">
+              {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
+                publicAsset && <PublicAssetItem publicAsset={publicAsset} />
+              ))}
+            </ul>
           </div>
-        </p>
-      </div>
-      <div id="portfolio-assets">
-        <h2>Private Assets</h2>
-        <ul id="private-assets">
-          {currentPortfolio.privateAssets && currentPortfolio.privateAssets.map((privateAsset) => (
-            privateAsset && <PrivateAssetItem privateAsset={privateAsset} />
-          ))}
-        </ul>
-        <h2>Public Assets</h2>
-        <ul id="public-assets">
-          {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
-            publicAsset && <PublicAssetItem publicAsset={publicAsset} />
-          ))}
-        </ul>
-      </div>
-    </div>
-  ) : (<div />);
+        </div>
+      </Route>
+    </Switch>
+  ) : (
+    <div />
+  );
 }
 
 export default PortfolioView;

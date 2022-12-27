@@ -23,18 +23,19 @@ function PortfoliosView() {
       <Route path="/">
         <div>
           <h1>My portfolios</h1>
-          <Link to={`${match.path}/create`}>Create a portfolio</Link>
+          <Link to={`${match.url}/create`}>Create a portfolio</Link>
           <ul>
-            {portfoliosCtx?.data && portfoliosCtx.data.map((portfolio) => (
-
-              <li key={portfolio.id}>
-                <Link to={`${match.url}/${portfolio.id}`}>
-                  <p>{portfolio.name}</p>
-                  <p>{portfolio.description}</p>
-                  <p>{portfolio.assetQuantity}</p>
-                </Link>
-              </li>
-            ))}
+            {portfoliosCtx?.data && portfoliosCtx.data
+              .filter(Boolean)
+              .map((portfolio) => (portfolio && (
+                <li key={portfolio.id}>
+                  <Link to={`${match.url}/${portfolio.id}`}>
+                    <p>{portfolio.name}</p>
+                    <p>{portfolio.description}</p>
+                    <p>{portfolio.assetQuantity}</p>
+                  </Link>
+                </li>
+              )))}
           </ul>
         </div>
       </Route>

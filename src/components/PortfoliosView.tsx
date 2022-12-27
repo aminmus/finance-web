@@ -23,7 +23,7 @@ function PortfoliosView() {
       <Route path="/">
         <div>
           <h1>My portfolios</h1>
-          <Link to={`${match.path}/create`}>Create a portfolio</Link>
+          <Link to={`${match.url}/create`}>Create a portfolio</Link>
           <ul>
             {portfoliosCtx?.data && portfoliosCtx.data
               .filter(Boolean)

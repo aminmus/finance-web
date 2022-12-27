@@ -8,8 +8,9 @@ import { GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO } from '../graphql-s
 import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-strings/__generated__/deleteOnePortfolio';
 import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
-import { CREATE_PUBLIC_ASSET } from '../graphql-strings/assets';
+import { CREATE_PRIVATE_ASSET, CREATE_PUBLIC_ASSET } from '../graphql-strings/assets';
 import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-strings/__generated__/createOnePublicAsset';
+import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
 
 interface PortfoliosContextType {
   loading: boolean;
@@ -26,6 +27,13 @@ interface PortfoliosContextType {
     > | undefined
   ) => Promise<FetchResult<this['createPublicAssetResponse']['data']>>;
   createPublicAssetResponse: MutationResult<createOnePublicAsset>;
+  createPrivateAsset: (
+    options?: MutationFunctionOptions<
+    createOnePrivateAsset,
+    createOnePrivateAssetVariables
+    > | undefined
+  ) => Promise<FetchResult<this['createPrivateAssetResponse']['data']>>;
+  createPrivateAssetResponse: MutationResult<createOnePrivateAsset>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -47,6 +55,10 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     createPublicAsset,
     createPublicAssetResponse,
   ] = useMutation<createOnePublicAsset, createOnePublicAssetVariables>(CREATE_PUBLIC_ASSET);
+  const [
+    createPrivateAsset,
+    createPrivateAssetResponse,
+  ] = useMutation<createOnePrivateAsset, createOnePrivateAssetVariables>(CREATE_PRIVATE_ASSET);
 
   return (
     <portfoliosContext.Provider value={{
@@ -59,6 +71,8 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       deleteOneResponse,
       createPublicAsset,
       createPublicAssetResponse,
+      createPrivateAsset,
+      createPrivateAssetResponse,
     }}
     >
       {children}

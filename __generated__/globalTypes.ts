@@ -12,15 +12,37 @@ export enum TransactionType {
   sell = "sell",
 }
 
+export interface AssetCreateNestedOneWithoutPrivateAssetInput {
+  create?: AssetCreateWithoutPrivateAssetInput | null;
+  connectOrCreate?: AssetCreateOrConnectWithoutPrivateAssetInput | null;
+  connect?: AssetWhereUniqueInput | null;
+}
+
 export interface AssetCreateNestedOneWithoutPublicAssetInput {
   create?: AssetCreateWithoutPublicAssetInput | null;
   connectOrCreate?: AssetCreateOrConnectWithoutPublicAssetInput | null;
   connect?: AssetWhereUniqueInput | null;
 }
 
+export interface AssetCreateOrConnectWithoutPrivateAssetInput {
+  where: AssetWhereUniqueInput;
+  create: AssetCreateWithoutPrivateAssetInput;
+}
+
 export interface AssetCreateOrConnectWithoutPublicAssetInput {
   where: AssetWhereUniqueInput;
   create: AssetCreateWithoutPublicAssetInput;
+}
+
+export interface AssetCreateWithoutPrivateAssetInput {
+  updatedAt?: any | null;
+  createdAt?: any | null;
+  name: string;
+  description?: string | null;
+  quantity?: number | null;
+  portfolio: PortfolioCreateNestedOneWithoutAssetsInput;
+  transactions?: TransactionRecordCreateNestedManyWithoutAssetInput | null;
+  publicAsset?: PublicAssetCreateNestedOneWithoutBaseAssetInput | null;
 }
 
 export interface AssetCreateWithoutPublicAssetInput {
@@ -85,6 +107,11 @@ export interface PortfolioWhereUniqueInput {
   id?: number | null;
 }
 
+export interface PrivateAssetCreateInput {
+  baseAsset: AssetCreateNestedOneWithoutPrivateAssetInput;
+  historicalValues?: HistoricalValueCreateNestedManyWithoutAssetInput | null;
+}
+
 export interface PrivateAssetCreateNestedOneWithoutBaseAssetInput {
   create?: PrivateAssetCreateWithoutBaseAssetInput | null;
   connectOrCreate?: PrivateAssetCreateOrConnectWithoutBaseAssetInput | null;
@@ -108,6 +135,26 @@ export interface PublicAssetCreateInput {
   symbol?: string | null;
   market?: string | null;
   baseAsset: AssetCreateNestedOneWithoutPublicAssetInput;
+}
+
+export interface PublicAssetCreateNestedOneWithoutBaseAssetInput {
+  create?: PublicAssetCreateWithoutBaseAssetInput | null;
+  connectOrCreate?: PublicAssetCreateOrConnectWithoutBaseAssetInput | null;
+  connect?: PublicAssetWhereUniqueInput | null;
+}
+
+export interface PublicAssetCreateOrConnectWithoutBaseAssetInput {
+  where: PublicAssetWhereUniqueInput;
+  create: PublicAssetCreateWithoutBaseAssetInput;
+}
+
+export interface PublicAssetCreateWithoutBaseAssetInput {
+  symbol?: string | null;
+  market?: string | null;
+}
+
+export interface PublicAssetWhereUniqueInput {
+  id?: number | null;
 }
 
 export interface TransactionRecordCreateNestedManyWithoutAssetInput {

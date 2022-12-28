@@ -41,3 +41,19 @@ export const CREATE_PRIVATE_ASSET = gql`
     }
   }
 `;
+
+export const DELETE_PRIVATE_ASSET = gql`
+  mutation deleteOnePrivateAsset($assetId: Int!) {
+    deleteOnePrivateAsset(where: { id: $assetId }) {
+        id
+    }
+  }
+`;
+
+export const DELETE_PUBLIC_ASSET = gql`
+  mutation deleteOnePublicAsset($assetId: Int!) {
+    deleteOnePublicAsset(where: { id: $assetId }) {
+        id
+    }
+  }
+`;

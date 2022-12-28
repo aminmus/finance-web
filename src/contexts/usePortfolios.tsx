@@ -8,9 +8,13 @@ import { GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO } from '../graphql-s
 import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-strings/__generated__/deleteOnePortfolio';
 import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
-import { CREATE_PRIVATE_ASSET, CREATE_PUBLIC_ASSET } from '../graphql-strings/assets';
+import {
+  CREATE_PRIVATE_ASSET, CREATE_PUBLIC_ASSET, DELETE_PRIVATE_ASSET, DELETE_PUBLIC_ASSET,
+} from '../graphql-strings/assets';
 import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-strings/__generated__/createOnePublicAsset';
 import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
+import { deleteOnePublicAsset, deleteOnePublicAssetVariables } from '../graphql-strings/__generated__/deleteOnePublicAsset';
+import { deleteOnePrivateAsset, deleteOnePrivateAssetVariables } from '../graphql-strings/__generated__/deleteOnePrivateAsset';
 
 interface PortfoliosContextType {
   loading: boolean;
@@ -34,6 +38,10 @@ interface PortfoliosContextType {
     > | undefined
   ) => Promise<FetchResult<this['createPrivateAssetResponse']['data']>>;
   createPrivateAssetResponse: MutationResult<createOnePrivateAsset>;
+  deletePublicAsset: Function;
+  deletePublicAssetResponse: MutationResult<deleteOnePublicAsset>;
+  deletePrivateAsset: Function;
+  deletePrivateAssetResponse: MutationResult<deleteOnePrivateAsset>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -59,6 +67,14 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     createPrivateAsset,
     createPrivateAssetResponse,
   ] = useMutation<createOnePrivateAsset, createOnePrivateAssetVariables>(CREATE_PRIVATE_ASSET);
+  const [
+    deletePrivateAsset,
+    deletePrivateAssetResponse,
+  ] = useMutation<deleteOnePrivateAsset, deleteOnePrivateAssetVariables>(DELETE_PRIVATE_ASSET);
+  const [
+    deletePublicAsset,
+    deletePublicAssetResponse,
+  ] = useMutation<deleteOnePublicAsset, deleteOnePublicAssetVariables>(DELETE_PUBLIC_ASSET);
 
   return (
     <portfoliosContext.Provider value={{
@@ -73,6 +89,10 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       createPublicAssetResponse,
       createPrivateAsset,
       createPrivateAssetResponse,
+      deletePublicAsset,
+      deletePublicAssetResponse,
+      deletePrivateAsset,
+      deletePrivateAssetResponse,
     }}
     >
       {children}

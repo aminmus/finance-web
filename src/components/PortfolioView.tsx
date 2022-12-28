@@ -1,12 +1,15 @@
-import { Button, ButtonGroup } from '@material-ui/core';
 import React, { SyntheticEvent, useEffect } from 'react';
+import { Button, ButtonGroup } from '@material-ui/core';
 import {
+  Link,
   Route, Switch, useHistory, useParams, useRouteMatch,
 } from 'react-router-dom';
 import { usePortfolios } from '../contexts/usePortfolios';
 import { myPortfolios_myPortfolios_privateAssets, myPortfolios_myPortfolios_publicAssets } from '../graphql-strings/__generated__/myPortfolios';
 import CreatePrivateAsset from './CreatePrivateAsset';
 import CreatePublicAsset from './CreatePublicAsset';
+import PublicAssetView from './PublicAssetView';
+import PrivateAssetView from './PrivateAssetView';
 
 function PrivateAssetItem(
   { privateAsset: { baseAsset } }: { privateAsset: myPortfolios_myPortfolios_privateAssets },
@@ -66,6 +69,9 @@ function PortfolioView() {
   if (!currentPortfolio && !portfoliosCtx?.loading) {
     return <p>Portfolio not found</p>;
   }
+  if (!currentPortfolio) {
+    return <div />;
+  }
 
   const handleDeletePortfolio = (_event: SyntheticEvent) => {
     if (!currentPortfolio) return;
@@ -86,7 +92,17 @@ function PortfolioView() {
     return <p>Deleting Portfolio...</p>;
   }
 
-  return currentPortfolio ? (
+  const getPublicAssetById = (assetId: string) => (
+    (currentPortfolio?.publicAssets
+      && currentPortfolio?.publicAssets.find((asset) => asset?.id === parseInt(assetId, 10))
+    ) || null);
+
+  const getPrivateAssetById = (assetId: string) => (
+    (currentPortfolio?.privateAssets
+      && currentPortfolio?.privateAssets.find((asset) => asset?.id === parseInt(assetId, 10))
+    ) || null);
+
+  return (
     <Switch>
       <Route path={`${match.path}/assets/public/create`}>
         <CreatePublicAsset portfolioId={currentPortfolio.id} />
@@ -94,6 +110,18 @@ function PortfolioView() {
       <Route path={`${match.path}/assets/private/create`}>
         <CreatePrivateAsset portfolioId={currentPortfolio.id} />
       </Route>
+      <Route
+        path={`${match.path}/assets/public/:assetId`}
+        render={({ match: { params: { assetId } } }) => (
+          <PublicAssetView asset={getPublicAssetById(assetId)} />
+        )}
+      />
+      <Route
+        path={`${match.path}/assets/private/:assetId`}
+        render={({ match: { params: { assetId } } }) => (
+          <PrivateAssetView asset={getPrivateAssetById(assetId)} />
+        )}
+      />
       <Route path={`${match.path}/`}>
         <div>
           <ButtonGroup>
@@ -125,21 +153,28 @@ function PortfolioView() {
             <ul id="private-assets">
               {currentPortfolio.privateAssets
                 && currentPortfolio.privateAssets.map((privateAsset) => (
-                  privateAsset && <PrivateAssetItem privateAsset={privateAsset} />
+                  privateAsset
+                  && (
+                    <Link to={`${match.url}/assets/private/${privateAsset.id}`}>
+                      <PrivateAssetItem privateAsset={privateAsset} />
+                    </Link>
+                  )
                 ))}
             </ul>
             <h2>Public Assets</h2>
             <ul id="public-assets">
               {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
-                publicAsset && <PublicAssetItem publicAsset={publicAsset} />
+                publicAsset && (
+                  <Link to={`${match.url}/assets/public/${publicAsset.id}`}>
+                    <PublicAssetItem publicAsset={publicAsset} />
+                  </Link>
+                )
               ))}
             </ul>
           </div>
         </div>
       </Route>
     </Switch>
-  ) : (
-    <div />
   );
 }
 

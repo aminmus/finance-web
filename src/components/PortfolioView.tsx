@@ -76,8 +76,6 @@ function PortfolioView() {
   const handleDeletePortfolio = (_event: SyntheticEvent) => {
     if (!currentPortfolio) return;
 
-    console.log({ variables: { portfolioId: currentPortfolio.id } });
-
     portfoliosCtx?.deleteOne({ variables: { portfolioId: currentPortfolio.id } });
   };
 

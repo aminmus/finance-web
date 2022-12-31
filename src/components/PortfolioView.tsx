@@ -1,5 +1,10 @@
-import React, { SyntheticEvent, useEffect } from 'react';
-import { Button, ButtonGroup } from '@material-ui/core';
+import React, {
+  ChangeEvent, SyntheticEvent, useEffect, useState,
+} from 'react';
+import {
+  Button, ButtonGroup, TextField,
+} from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import {
   Link,
   Route, Switch, useHistory, useParams, useRouteMatch,
@@ -53,11 +58,34 @@ function PublicAssetItem(
   );
 }
 
+const EDITABLE_PORTFOLIO_FIELDS = ['name', 'description'] as const;
+const initialPortfolioInput = { name: '', description: '' };
+
 function PortfolioView() {
   const { portfolioId } = useParams() as { portfolioId: string };
   const portfoliosCtx = usePortfolios();
   const history = useHistory();
   const match = useRouteMatch();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [portfolioInput, setPortfolioInput] = useState(initialPortfolioInput);
+  const [validationError, setValidationError] = useState('');
+
+  useEffect(() => {
+    if (portfoliosCtx?.deleteOneResponse.called && !portfoliosCtx?.deleteOneResponse.loading) {
+      history.push('/portfolios');
+    }
+  },
+  [portfoliosCtx?.deleteOneResponse.loading, portfoliosCtx?.deleteOneResponse.called]);
+
+  useEffect(() => {
+    if (portfoliosCtx?.updateOneResponse.called && !portfoliosCtx?.updateOneResponse.loading) {
+      setIsEditing(false);
+      setPortfolioInput(initialPortfolioInput);
+      portfoliosCtx.refetch();
+    }
+  },
+  [portfoliosCtx?.updateOneResponse.loading, portfoliosCtx?.updateOneResponse.called]);
 
   const currentPortfolio = portfoliosCtx?.data && portfoliosCtx?.data
     .filter(Boolean)
@@ -73,18 +101,57 @@ function PortfolioView() {
     return <div />;
   }
 
+  const handlePortfolioInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (['name', 'description'].includes(event.target.name)) {
+      setPortfolioInput((prevState) => ({ ...prevState, [event.target.name]: event.target.value }));
+    }
+  };
+
+  const handleCancelEditPortfolio = (_event: SyntheticEvent) => {
+    setIsEditing(false);
+    setValidationError('');
+    setPortfolioInput(initialPortfolioInput);
+  };
+
+  const handleSubmitEditPortfolio = (event: SyntheticEvent) => {
+    event.preventDefault();
+    if (!portfoliosCtx) return;
+
+    const inputKeys = Object.keys(portfolioInput);
+
+    // @ts-ignore
+    const includesEmptyValues = inputKeys.some((inputKey) => !portfolioInput[inputKey]);
+
+    if (includesEmptyValues) {
+      setValidationError('Portfolio cannot contain empty fields');
+      return;
+    }
+
+    const updateData = inputKeys
+      // @ts-ignore
+      .filter((inputKey) => EDITABLE_PORTFOLIO_FIELDS.includes(inputKey))
+      // @ts-ignore
+      .filter(
+        (inputKey) => (
+          // @ts-ignore
+          portfolioInput[inputKey] !== currentPortfolio[inputKey]),
+      ).reduce((dataObj, inputKey) => ({
+        ...dataObj,
+        // @ts-ignore
+        [inputKey]: portfolioInput[inputKey],
+      }), {});
+
+    portfoliosCtx.updateOne({ variables: { ...updateData, portfolioId: currentPortfolio.id } });
+    setValidationError('');
+  };
+
+  const handleEditPortfolio = (_event: SyntheticEvent) => setIsEditing(true);
+
   const handleDeletePortfolio = (_event: SyntheticEvent) => {
     if (!currentPortfolio) return;
 
     portfoliosCtx?.deleteOne({ variables: { portfolioId: currentPortfolio.id } });
   };
-
-  useEffect(() => {
-    if (portfoliosCtx?.deleteOneResponse.called && !portfoliosCtx?.deleteOneResponse.loading) {
-      history.push('/portfolios');
-    }
-  },
-  [portfoliosCtx?.deleteOneResponse.loading, portfoliosCtx?.deleteOneResponse.called]);
 
   if (portfoliosCtx?.deleteOneResponse.called && portfoliosCtx?.deleteOneResponse.loading) {
     return <p>Deleting Portfolio...</p>;
@@ -122,23 +189,59 @@ function PortfolioView() {
       />
       <Route path={`${match.path}/`}>
         <div>
+          {validationError && (<MuiAlert severity="error">{validationError}</MuiAlert>)}
           <ButtonGroup>
-            <Button href={`${match.url}/assets/public/create`} type="button">
-              Add Public Asset
-            </Button>
-            <Button href={`${match.url}/assets/private/create`} type="button">
-              Add Private Asset
-            </Button>
-            <Button type="button" onClick={handleDeletePortfolio}>Delete Portfolio</Button>
+            {
+              isEditing ? (
+                <>
+                  <Button type="submit" onClick={handleSubmitEditPortfolio}>Confirm edit</Button>
+                  <Button type="submit" onClick={handleCancelEditPortfolio}>Cancel edit</Button>
+                </>
+              ) : (
+                <>
+                  <Button href={`${match.url}/assets/public/create`} type="button">
+                    Add Public Asset
+                  </Button>
+                  <Button href={`${match.url}/assets/private/create`} type="button">
+                    Add Private Asset
+                  </Button>
+                  <Button type="button" onClick={handleDeletePortfolio}>Delete Portfolio</Button>
+                  <Button type="button" onClick={handleEditPortfolio}>Edit Portfolio</Button>
+                </>
+              )
+            }
           </ButtonGroup>
           <div id="portfolio-info">
-            <h1>
-              {currentPortfolio?.name}
-            </h1>
+            {isEditing ? (
+              <TextField
+                label="Name"
+                name="name"
+                defaultValue={currentPortfolio?.name}
+                value={portfolioInput?.name}
+                onChange={handlePortfolioInputChange}
+              />
+            ) : (
+              <h1>
+                {currentPortfolio?.name}
+              </h1>
+            )}
+
             <p>
               <div id="portfolio-description">
-                <span>Description: </span>
-                <span>{currentPortfolio?.description}</span>
+                {isEditing ? (
+                  <TextField
+                    label="Description"
+                    name="description"
+                    defaultValue={currentPortfolio?.description}
+                    value={portfolioInput?.description}
+                    onChange={handlePortfolioInputChange}
+                  />
+                ) : (
+                  <>
+                    <span>Description: </span>
+                    <span>{currentPortfolio?.description}</span>
+                  </>
+                )}
               </div>
               <div id="portfolio-asset-quantity">
                 <span>Unique assets: </span>

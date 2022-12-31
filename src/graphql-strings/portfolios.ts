@@ -132,3 +132,52 @@ export const DELETE_PORTFOLIO = gql`
     }
   }
 `;
+
+export const UPDATE_PORTFOLIO = gql`
+  mutation updateOnePortfolio($portfolioId: Int!, $name: String, $description: String) {
+    updateOnePortfolio(
+      data: {
+        name: {
+          set: $name
+        }
+        description:{
+           set: $description
+           }
+      },
+      where: {
+        id: $portfolioId
+      }
+    ) {
+      id
+      updatedAt
+      createdAt
+      name
+      description
+      assetQuantity
+      publicAssets {
+        id
+        symbol
+        market
+        baseAsset {
+          name
+          description
+          quantity
+          createdAt
+          updatedAt
+          portfolioId
+        }
+      }
+      privateAssets {
+        id
+        baseAsset {
+          name
+          description
+          quantity
+          createdAt
+          updatedAt
+          portfolioId
+        }
+      }
+    }
+  }
+`;

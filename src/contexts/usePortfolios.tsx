@@ -4,7 +4,9 @@ import React, {
 import {
   useQuery, ApolloError, useMutation, MutationResult, MutationFunctionOptions, FetchResult,
 } from '@apollo/client';
-import { GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO } from '../graphql-strings/portfolios';
+import {
+  GET_PORTFOLIOS, CREATE_PORTFOLIO, DELETE_PORTFOLIO, UPDATE_PORTFOLIO,
+} from '../graphql-strings/portfolios';
 import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-strings/__generated__/deleteOnePortfolio';
 import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
@@ -15,14 +17,18 @@ import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-
 import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
 import { deleteOnePublicAsset, deleteOnePublicAssetVariables } from '../graphql-strings/__generated__/deleteOnePublicAsset';
 import { deleteOnePrivateAsset, deleteOnePrivateAssetVariables } from '../graphql-strings/__generated__/deleteOnePrivateAsset';
+import { updateOnePortfolio, updateOnePortfolioVariables } from '../graphql-strings/__generated__/UpdateOnePortfolio';
 
 interface PortfoliosContextType {
   loading: boolean;
   error: ApolloError | undefined;
   data: null | myPortfolios['myPortfolios'];
+  refetch: Function;
   createOne: Function;
   createOneResponse: MutationResult<createOnePortfolio>;
   deleteOne: Function;
+  updateOneResponse: MutationResult<updateOnePortfolio>;
+  updateOne: Function;
   deleteOneResponse: MutationResult<deleteOnePortfolio>;
   createPublicAsset: (
     options?: MutationFunctionOptions<
@@ -50,11 +56,17 @@ type ProvidePortfolioProps = {
   children: React.ReactNode;
 };
 export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
-  const { loading, error, data } = useQuery<myPortfolios>(GET_PORTFOLIOS);
+  const {
+    loading, error, data, refetch,
+  } = useQuery<myPortfolios>(GET_PORTFOLIOS);
   const [
     createOne,
     createOneResponse,
   ] = useMutation<createOnePortfolio, createOnePortfolioVariables>(CREATE_PORTFOLIO);
+  const [
+    updateOne,
+    updateOneResponse,
+  ] = useMutation<updateOnePortfolio, updateOnePortfolioVariables>(UPDATE_PORTFOLIO);
   const [
     deleteOne,
     deleteOneResponse,
@@ -81,8 +93,11 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       loading,
       error,
       data: data?.myPortfolios ?? null,
+      refetch,
       createOne,
       createOneResponse,
+      updateOne,
+      updateOneResponse,
       deleteOne,
       deleteOneResponse,
       createPublicAsset,

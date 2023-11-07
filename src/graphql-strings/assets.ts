@@ -42,6 +42,41 @@ export const CREATE_PRIVATE_ASSET = gql`
   }
 `;
 
+export const UPDATE_PRIVATE_ASSET = gql`
+  mutation updateOnePrivateAsset(
+    $assetId: Int!
+    $name: String
+    $description: String
+  ) {
+    updateOnePrivateAsset(
+      data: {
+        baseAsset: {
+          update: { name: { set: $name }, description: { set: $description } }
+        }
+      }
+      where: { id: $assetId }
+    ) {
+      id
+      historicalValues(first: 25) {
+        id
+        createdAt
+        updatedAt
+        date
+        assetId
+        unitPrice
+      }
+      baseAsset {
+        name
+        description
+        quantity
+        createdAt
+        updatedAt
+        portfolioId
+      }
+    }
+  }
+`;
+
 export const DELETE_PRIVATE_ASSET = gql`
   mutation deleteOnePrivateAsset($assetId: Int!) {
     deleteOnePrivateAsset(where: { id: $assetId }) {

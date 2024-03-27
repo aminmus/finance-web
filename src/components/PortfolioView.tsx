@@ -256,7 +256,7 @@ function PortfolioView() {
                 && currentPortfolio.privateAssets.map((privateAsset) => (
                   privateAsset
                   && (
-                    <Link to={`${match.url}/assets/private/${privateAsset.id}`}>
+                    <Link key={privateAsset.id} to={`${match.url}/assets/private/${privateAsset.id}`}>
                       <PrivateAssetItem privateAsset={privateAsset} />
                     </Link>
                   )
@@ -266,7 +266,7 @@ function PortfolioView() {
             <ul id="public-assets">
               {currentPortfolio.publicAssets && currentPortfolio.publicAssets.map((publicAsset) => (
                 publicAsset && (
-                  <Link to={`${match.url}/assets/public/${publicAsset.id}`}>
+                  <Link key={publicAsset.id} to={`${match.url}/assets/public/${publicAsset.id}`}>
                     <PublicAssetItem publicAsset={publicAsset} />
                   </Link>
                 )

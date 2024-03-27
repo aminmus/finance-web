@@ -43,9 +43,9 @@ function AssetView({
   const handleEdit = (_event: SyntheticEvent) => {
     if (setIsEditing) setIsEditing(true);
   };
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEditInputData((prevState) => ({ ...prevState, 'event.target.name': event.target.value }));
-  };
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => (
+    setEditInputData((prevState) => ({ ...prevState, [event.target.name]: event.target.value }))
+  );
 
   const handleEditCancel = (_event: SyntheticEvent) => {
     if (setIsEditing) setIsEditing(false);

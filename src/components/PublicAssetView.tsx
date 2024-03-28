@@ -61,15 +61,16 @@ function PublicAssetView({ asset }: Props) {
 
   return (
     <AssetView
+      assetId={asset.id}
       baseAsset={asset.baseAsset}
       title={`${asset.baseAsset.name} (${asset.symbol})`}
       subHeader={asset.market}
       handleDelete={handleDelete}
-      setIsEditing={setIsEditing}
-      handleEditSave={handleEditSave}
-      isEditing={isEditing}
-      editInputData={editInputData}
-      setEditInputData={setEditInputData}
+      // setIsEditing={setIsEditing}
+      // handleEditSave={handleEditSave}
+      // isEditing={isEditing}
+      // editInputData={editInputData}
+      // setEditInputData={setEditInputData}
     />
   );
 }

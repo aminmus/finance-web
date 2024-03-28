@@ -11,13 +11,18 @@ import { deleteOnePortfolio, deleteOnePortfolioVariables } from '../graphql-stri
 import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-strings/__generated__/createOnePortfolio';
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
 import {
-  CREATE_PRIVATE_ASSET, CREATE_PUBLIC_ASSET, DELETE_PRIVATE_ASSET, DELETE_PUBLIC_ASSET,
+  CREATE_PRIVATE_ASSET,
+  CREATE_PUBLIC_ASSET,
+  DELETE_PRIVATE_ASSET,
+  DELETE_PUBLIC_ASSET,
+  UPDATE_PRIVATE_ASSET,
 } from '../graphql-strings/assets';
 import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-strings/__generated__/createOnePublicAsset';
 import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
 import { deleteOnePublicAsset, deleteOnePublicAssetVariables } from '../graphql-strings/__generated__/deleteOnePublicAsset';
 import { deleteOnePrivateAsset, deleteOnePrivateAssetVariables } from '../graphql-strings/__generated__/deleteOnePrivateAsset';
-import { updateOnePortfolio, updateOnePortfolioVariables } from '../graphql-strings/__generated__/UpdateOnePortfolio';
+import { updateOnePortfolio, updateOnePortfolioVariables } from '../graphql-strings/__generated__/updateOnePortfolio';
+import { updateOnePrivateAssetVariables, updateOnePrivateAsset } from '../graphql-strings/__generated__/updateOnePrivateAsset';
 
 interface PortfoliosContextType {
   loading: boolean;
@@ -48,6 +53,13 @@ interface PortfoliosContextType {
   deletePublicAssetResponse: MutationResult<deleteOnePublicAsset>;
   deletePrivateAsset: Function;
   deletePrivateAssetResponse: MutationResult<deleteOnePrivateAsset>;
+  updatePrivateAsset: (options?: MutationFunctionOptions<
+  updateOnePrivateAsset,
+  updateOnePrivateAssetVariables
+  > | undefined) => Promise<FetchResult<
+  updateOnePrivateAsset
+  >>;
+  updatePrivateAssetResponse: MutationResult<updateOnePrivateAsset>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -87,6 +99,35 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     deletePublicAsset,
     deletePublicAssetResponse,
   ] = useMutation<deleteOnePublicAsset, deleteOnePublicAssetVariables>(DELETE_PUBLIC_ASSET);
+  const [
+    updatePrivateAsset,
+    updatePrivateAssetResponse,
+  ] = useMutation<updateOnePrivateAsset, updateOnePrivateAssetVariables>(UPDATE_PRIVATE_ASSET);
+  // const [
+  //   updateOnePublicAsset,
+  //   updateOnePublicAssetResponse,
+  // ] = useMutation<updateOnePublicAsset, updateOnePublicAssetVariables>(UPDATE_PUBLIC_ASSET);
+
+  // type BaseAssetInput = Pick<AssetCreateWithoutPrivateAssetInput, 'name' | 'description'>;
+  // type UpdatePrivateAssetInput = {
+  //   baseAsset: Partial<BaseAssetInput>;
+  // };
+
+  // const updatePrivateAssetx = (assetId: number, inputData: UpdatePrivateAssetInput) => {
+  //   updatePrivateAsset({
+  //     variables: {
+  //       assetId,
+  //       data: {
+  //         baseAsset: {
+  //           update: {
+  //             name: { set: inputData.baseAsset?.name },
+  //             description: { set: inputData.baseAsset?.description },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // };
 
   return (
     <portfoliosContext.Provider value={{
@@ -108,6 +149,8 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       deletePublicAssetResponse,
       deletePrivateAsset,
       deletePrivateAssetResponse,
+      updatePrivateAsset,
+      updatePrivateAssetResponse,
     }}
     >
       {children}

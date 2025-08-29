@@ -38,12 +38,6 @@
     "download-schema": "apollo service:download --endpoint=http://localhost:4000/graphql graphql-schema.json",
     "apollo:codegen": "npm run download-schema && apollo codegen:generate --localSchemaFile=graphql-schema.json --target=typescript --tagName=gql"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -59,6 +53,9 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3",
     "apollo": "^2.34.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.34.1",

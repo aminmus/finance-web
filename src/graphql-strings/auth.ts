@@ -22,3 +22,13 @@ query myUser {
     }
   }
 `;
+
+export const SIGN_UP = gql`
+mutation createOneUser($data: UserCreateInput!) {
+  createOneUser(data: $data) {
+    id
+    email
+    name
+  }
+}
+`;

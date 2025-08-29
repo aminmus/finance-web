@@ -1,9 +1,11 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import type { Theme } from '@mui/material/styles';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { SIGN_UP } from '../graphql-strings/auth';
 import { useAuth } from '../contexts/useAuth';
+import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   flexbox: {
@@ -13,31 +15,38 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function SignIn() {
+function SignUp() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [signUp] = useMutation(SIGN_UP);
   const history = useHistory();
-  const location = useLocation();
   const auth = useAuth();
-
-  const { from } = location.state as LocationState || { from: { pathname: '/' } };
-
   const classes = useStyles();
 
-  async function submitSignIn(event: SyntheticEvent) {
+  const submitSignUp = async (event: SyntheticEvent) => {
     event.preventDefault();
     try {
+      await signUp({ variables: { data: { name, email, password } } });
       await auth?.signIn(email, password);
-      history.replace(from);
+      history.replace('/');
     } catch (err) {
-      console.error('error caught in submitSignIn: ', err);
+      // eslint-disable-next-line no-console
+      console.error('error caught in submitSignUp: ', err);
     }
-  }
+  };
 
   return (
-    <form onSubmit={submitSignIn}>
+    <form onSubmit={submitSignUp}>
       <Box display="flex" className={classes.flexbox}>
         <>
+          <TextField
+            required
+            id="name"
+            label="name"
+            name="name"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          />
           <TextField
             required
             id="email"
@@ -45,7 +54,7 @@ function SignIn() {
             name="email"
             type="email"
             autoComplete="username"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           />
           <TextField
             required
@@ -53,19 +62,14 @@ function SignIn() {
             label="password"
             name="password"
             type="password"
-            autoComplete="current-password"
-            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
-          <Button type="submit">Sign in</Button>
-          <Link to="/sign-up">Need an account? Sign up</Link>
+          <Button type="submit">Sign up</Button>
         </>
       </Box>
     </form>
   );
 }
 
-type LocationState = {
-  from: Location;
-};
-
-export default SignIn;
+export default SignUp;

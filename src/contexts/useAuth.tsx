@@ -36,7 +36,7 @@ function useProvideAuth() {
   useEffect(() => {
     if ((called && loading) || (myUserResponse.called && myUserResponse.loading)) {
       setIsLoading(true);
-    } else if ((called && !loading) || (myUserResponse.called && !loading)) {
+    } else if ((called && !loading) || (myUserResponse.called && !myUserResponse.loading)) {
       setIsLoading(false);
     }
   }, [loading, myUserResponse.loading, called, myUserResponse.called]);

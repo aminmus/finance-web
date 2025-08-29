@@ -19,6 +19,10 @@ function PrivateAssetView({ asset }: Props) {
     portfoliosCtx?.deletePrivateAsset({ variables: { assetId: asset.id } });
   };
 
+  const handleEdit = (_event: SyntheticEvent) => {
+    history.push(`${match.url}/edit`);
+  };
+
   useEffect(() => {
     if (
       portfoliosCtx?.deletePrivateAssetResponse.called
@@ -38,6 +42,7 @@ function PrivateAssetView({ asset }: Props) {
       baseAsset={asset.baseAsset}
       title={asset.baseAsset.name}
       handleDelete={handleDelete}
+      handleEdit={handleEdit}
     />
   );
 }

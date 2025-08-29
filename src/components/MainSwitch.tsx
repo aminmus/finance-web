@@ -6,6 +6,7 @@ import { ProvidePortfolios } from '../contexts/usePortfolios';
 import PortfoliosView from './PortfoliosView';
 import PrivateRoute from './PrivateRoute';
 import SignIn from './SignIn';
+import SignUp from './SignUp';
 
 function MainSwitch() {
   const auth = useAuth();
@@ -25,6 +26,9 @@ function MainSwitch() {
       <Route path="/sign-in">
         <SignIn />
         {/* <SignIn isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /> */}
+      </Route>
+      <Route path="/sign-up">
+        <SignUp />
       </Route>
       <Route path="/">
         <Box display="flex">

@@ -15,6 +15,7 @@ import CreatePrivateAsset from './CreatePrivateAsset';
 import CreatePublicAsset from './CreatePublicAsset';
 import PublicAssetView from './PublicAssetView';
 import PrivateAssetView from './PrivateAssetView';
+import EditPrivateAsset from './EditPrivateAsset';
 
 function PrivateAssetItem(
   { privateAsset: { baseAsset } }: { privateAsset: myPortfolios_myPortfolios_privateAssets },
@@ -175,6 +176,12 @@ function PortfolioView() {
       <Route path={`${match.path}/assets/private/create`}>
         <CreatePrivateAsset portfolioId={currentPortfolio.id} />
       </Route>
+      <Route
+        path={`${match.path}/assets/private/:assetId/edit`}
+        render={({ match: { params: { assetId } } }) => (
+          <EditPrivateAsset asset={getPrivateAssetById(assetId)} />
+        )}
+      />
       <Route
         path={`${match.path}/assets/public/:assetId`}
         render={({ match: { params: { assetId } } }) => (

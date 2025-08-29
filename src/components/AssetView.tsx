@@ -9,10 +9,11 @@ type Props = {
   title: string,
   handleDelete: React.MouseEventHandler<HTMLButtonElement>,
   subHeader?: string | null,
+  handleEdit?: React.MouseEventHandler<HTMLButtonElement>,
 };
 
 function AssetView({
-  baseAsset, handleDelete, title, subHeader = null,
+  baseAsset, handleDelete, title, subHeader = null, handleEdit,
 }: Props) {
   if (!baseAsset) return <p>Asset not found</p>;
 
@@ -46,6 +47,7 @@ function AssetView({
       </CardContent>
 
       <CardActions>
+        {handleEdit && <Button onClick={handleEdit} type="button">Edit</Button>}
         <Button onClick={handleDelete} type="button">Delete</Button>
       </CardActions>
     </Card>

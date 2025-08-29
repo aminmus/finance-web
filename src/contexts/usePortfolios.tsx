@@ -12,6 +12,7 @@ import { createOnePortfolio, createOnePortfolioVariables } from '../graphql-stri
 import { myPortfolios } from '../graphql-strings/__generated__/myPortfolios';
 import {
   CREATE_PRIVATE_ASSET, CREATE_PUBLIC_ASSET, DELETE_PRIVATE_ASSET, DELETE_PUBLIC_ASSET,
+  UPDATE_PRIVATE_ASSET,
 } from '../graphql-strings/assets';
 import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-strings/__generated__/createOnePublicAsset';
 import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
@@ -48,6 +49,8 @@ interface PortfoliosContextType {
   deletePublicAssetResponse: MutationResult<deleteOnePublicAsset>;
   deletePrivateAsset: Function;
   deletePrivateAssetResponse: MutationResult<deleteOnePrivateAsset>;
+  updatePrivateAsset: Function;
+  updatePrivateAssetResponse: MutationResult<any>;
 }
 
 const portfoliosContext = createContext<PortfoliosContextType | undefined>(undefined);
@@ -87,6 +90,10 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
     deletePublicAsset,
     deletePublicAssetResponse,
   ] = useMutation<deleteOnePublicAsset, deleteOnePublicAssetVariables>(DELETE_PUBLIC_ASSET);
+  const [
+    updatePrivateAsset,
+    updatePrivateAssetResponse,
+  ] = useMutation(UPDATE_PRIVATE_ASSET);
 
   return (
     <portfoliosContext.Provider value={{
@@ -108,6 +115,8 @@ export function ProvidePortfolios({ children }: ProvidePortfolioProps) {
       deletePublicAssetResponse,
       deletePrivateAsset,
       deletePrivateAssetResponse,
+      updatePrivateAsset,
+      updatePrivateAssetResponse,
     }}
     >
       {children}

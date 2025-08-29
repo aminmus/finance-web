@@ -16,6 +16,7 @@ type Props = {
   subHeader?: string | null;
   handleDelete: React.MouseEventHandler<HTMLButtonElement>;
   updateAsset?: Function;
+  handleEdit?: React.MouseEventHandler<HTMLButtonElement>;
   // handleEditSave?: React.MouseEventHandler<HTMLButtonElement>;
   // setIsEditing?: Function;
   // isEditing?: boolean;
@@ -104,7 +105,7 @@ const Actions = ({
       : (
         <>
           <Button onClick={handleDelete} type="button">Delete asset</Button>
-          <Button onClick={handleEdit} type="button">Edit asset</Button>
+          {handleEdit && <Button onClick={handleEdit} type="button">Edit</Button>}
         </>
       )}
   </CardActions>
@@ -117,6 +118,7 @@ function AssetView({
   title,
   subHeader = null,
   updateAsset,
+  handleEdit,
   // handleEditSave,
   // setIsEditing,
   // isEditing,
@@ -139,7 +141,7 @@ function AssetView({
     updatedAt,
   } = baseAsset;
 
-  const handleEdit = (_event: SyntheticEvent) => {
+  const handleStartEdit = (_event: SyntheticEvent) => {
     if (setIsEditing) setIsEditing(true);
   };
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => (
@@ -181,7 +183,7 @@ function AssetView({
         editInputData={editInputData}
         updateAsset={updateAsset}
         handleEditCancel={handleEditCancel}
-        handleEdit={handleEdit}
+        handleEdit={handleStartEdit}
         handleDelete={handleDelete}
       />
     </Card>

@@ -21,7 +21,7 @@ export default function CreatePortfolio() {
       portfolioCtx?.refetch()
       history.push(`/portfolios/${portfolioCtx.createOneResponse.data.createOnePortfolio.id}`);
     }
-  }, [portfolioCtx?.createOneResponse.data, portfolioCtx?.createOneResponse.loading]);
+  }, [portfolioCtx, portfolioCtx?.createOneResponse.data, portfolioCtx?.createOneResponse.loading, history]);
 
   function createPortfolio(event: SyntheticEvent) {
     event.preventDefault();

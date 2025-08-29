@@ -27,8 +27,7 @@ export default function CreatePublicAsset({ portfolioId }: Props) {
       !portfolioCtx?.createPublicAssetResponse.loading
       && portfolioCtx?.createPublicAssetResponse.data
     ) {
-      console.log(portfolioCtx?.createPublicAssetResponse.data);
-
+      portfolioCtx?.refetch();
       history.push(`/portfolios/${portfolioId}/assets`);
     }
   }, [

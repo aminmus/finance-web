@@ -21,8 +21,7 @@ export default function CreatePrivateAsset({ portfolioId }: Props) {
       !portfolioCtx?.createPrivateAssetResponse.loading
       && portfolioCtx?.createPrivateAssetResponse.data
     ) {
-      console.log(portfolioCtx?.createPrivateAssetResponse.data);
-
+      portfolioCtx?.refetch();
       history.push(`/portfolios/${portfolioId}/assets`);
     }
   }, [

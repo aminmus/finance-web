@@ -2,7 +2,7 @@
 import React, { ChangeEvent, SyntheticEvent, useState } from 'react';
 import {
   Button, Card, CardActions, CardContent, CardHeader, TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   myPortfolios_myPortfolios_privateAssets as PrivateAsset,
 } from '../graphql-strings/__generated__/myPortfolios';

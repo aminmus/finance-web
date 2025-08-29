@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import ReactDOM from 'react-dom/client';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import './index.css';
 import {
@@ -35,7 +35,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+root.render(
   <React.StrictMode>
     <CssBaseline />
     <BrowserRouter>
@@ -44,7 +45,6 @@ ReactDOM.render(
       </ApolloProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function

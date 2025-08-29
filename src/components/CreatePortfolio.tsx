@@ -18,8 +18,7 @@ export default function CreatePortfolio() {
 
   useEffect(() => {
     if (!portfolioCtx?.createOneResponse.loading && portfolioCtx?.createOneResponse.data) {
-      console.log(portfolioCtx?.createOneResponse.data);
-      // TODO: Add new portfolio to context data
+      portfolioCtx?.refetch()
       history.push(`/portfolios/${portfolioCtx.createOneResponse.data.createOnePortfolio.id}`);
     }
   }, [portfolioCtx?.createOneResponse.data, portfolioCtx?.createOneResponse.loading]);

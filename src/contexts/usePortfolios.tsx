@@ -18,7 +18,7 @@ import { createOnePublicAsset, createOnePublicAssetVariables } from '../graphql-
 import { createOnePrivateAsset, createOnePrivateAssetVariables } from '../graphql-strings/__generated__/createOnePrivateAsset';
 import { deleteOnePublicAsset, deleteOnePublicAssetVariables } from '../graphql-strings/__generated__/deleteOnePublicAsset';
 import { deleteOnePrivateAsset, deleteOnePrivateAssetVariables } from '../graphql-strings/__generated__/deleteOnePrivateAsset';
-import { updateOnePortfolio, updateOnePortfolioVariables } from '../graphql-strings/__generated__/UpdateOnePortfolio';
+import { updateOnePortfolio, updateOnePortfolioVariables } from '../graphql-strings/__generated__/updateOnePortfolio';
 
 interface PortfoliosContextType {
   loading: boolean;

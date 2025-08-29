@@ -1,5 +1,15 @@
-import { Button, Card, FormGroup, TextField } from '@material-ui/core';
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import {
+  Button,
+  Card,
+  FormGroup,
+  TextField,
+} from '@material-ui/core';
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { usePortfolios } from '../contexts/usePortfolios';
 import { myPortfolios_myPortfolios_privateAssets as PrivateAsset } from '../graphql-strings/__generated__/myPortfolios';

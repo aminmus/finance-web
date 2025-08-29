@@ -1,8 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { TextField, Button, Box } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
 
 const useStyles = makeStyles((theme) => ({

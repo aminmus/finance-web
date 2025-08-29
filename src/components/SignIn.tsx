@@ -1,10 +1,11 @@
 import React, { SyntheticEvent, useState } from 'react';
-import { TextField, Button, Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { TextField, Button, Box } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import type { Theme } from '@mui/material/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   flexbox: {
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',

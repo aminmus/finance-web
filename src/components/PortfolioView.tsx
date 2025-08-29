@@ -2,9 +2,8 @@ import React, {
   ChangeEvent, SyntheticEvent, useEffect, useState,
 } from 'react';
 import {
-  Button, ButtonGroup, TextField,
-} from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+  Button, ButtonGroup, TextField, Alert,
+} from '@mui/material';
 import {
   Link,
   Route, Switch, useHistory, useParams, useRouteMatch,
@@ -189,7 +188,7 @@ function PortfolioView() {
       />
       <Route path={`${match.path}/`}>
         <div>
-          {validationError && (<MuiAlert severity="error">{validationError}</MuiAlert>)}
+          {validationError && (<Alert severity="error">{validationError}</Alert>)}
           <ButtonGroup>
             {
               isEditing ? (
